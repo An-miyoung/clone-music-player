@@ -1,7 +1,15 @@
+import "./TestItem.css";
 import React from "react";
 
-function TestItem() {
-  return <div>TestItem</div>;
+function TestItem({ data, index }) {
+  return (
+    <div className="test-item">
+      <div>
+        <p>content:{data.content}</p>
+        <p>index: {index}</p>
+      </div>
+    </div>
+  );
 }
 
 export default TestItem;
