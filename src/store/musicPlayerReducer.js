@@ -57,9 +57,13 @@ const initialState = {
 
 const PLAY_MUSIC = "musicPlayer/PLAY_MUSIC";
 const STOP_MUSIC = "musicPlayer/STOP_MUSIC";
+const NEXT_MUSIC = "musicPlayer/NEXT_MUSIC";
+const PREV_MUSIC = "musicPlayer/PREV_MUSIC";
 
 export const playMusic = () => ({ type: PLAY_MUSIC });
 export const stopMusic = () => ({ type: STOP_MUSIC });
+export const nextMusic = () => ({ type: NEXT_MUSIC });
+export const prevMusic = () => ({ type: PREV_MUSIC });
 
 const musicPlayerReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -72,6 +76,22 @@ const musicPlayerReducer = (state = initialState, action) => {
       return {
         ...state,
         playingState: false,
+      };
+    case NEXT_MUSIC:
+      const nextIndex = (state.currentIndex + 1) % state.playList.length;
+      return {
+        ...state,
+        currentIndex: nextIndex,
+        CurrentMusicId: playList[nextIndex].id,
+      };
+    case PREV_MUSIC:
+      const prevIndex =
+        (state.currentIndex - 1 + state.playList.length) %
+        state.playList.length;
+      return {
+        ...state,
+        currentIndex: prevIndex,
+        CurrentMusicId: playList[prevIndex].id,
       };
     default:
       return state;

@@ -5,15 +5,19 @@ import React, {
   useCallback,
   useState,
 } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import "./ProgressArea.scss";
-import music1 from "../../music/music-1.mp3";
 import { playMusic, stopMusic } from "../../store/musicPlayerReducer";
 
 function ProgressArea(props, ref) {
   // 실제 핸들링되는 ref: 새로운 ref 선언해서 js 가 제공하는 audio 에 붙인다.
   const audioRef = useRef();
   const progressBar = useRef();
+  // 함수가 계속 rerender 되는 것을 막기 위해 shallowEqual 사용
+  const { playList, currentIndex } = useSelector(
+    (state) => ({ playList: state.playList, currentIndex: state.currentIndex }),
+    shallowEqual
+  );
   const dispatch = useDispatch();
   const [currentTime, setCurrentTime] = useState("00:00");
   const [duration, setDuration] = useState("00:00");
@@ -70,7 +74,7 @@ function ProgressArea(props, ref) {
         <audio
           autoPlay
           ref={audioRef}
-          src={music1}
+          src={playList[currentIndex].src}
           onPlay={onPlay}
           onPause={onPause}
           onTimeUpdate={onTimeUpdate}
