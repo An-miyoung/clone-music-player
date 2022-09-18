@@ -4,7 +4,10 @@ import img1 from "../../images/music-1.jpg";
 import { useSelector } from "react-redux";
 
 function SongDetail() {
-  const { playingState } = useSelector((state) => state);
+  // shalowEqual 을 쓰지 않고 rerender를 막으려면 필요한 state를 각각 부른다.
+  const playingState = useSelector((state) => state.playingState);
+  const playList = useSelector((state) => state.playList);
+  const currentIndex = useSelector((state) => state.currentIndex);
 
   return (
     <>
@@ -12,11 +15,14 @@ function SongDetail() {
         <span>{playingState ? "Now Playing" : "Not Playing"}</span>
       </div>
       <div className="img-area">
-        <img src={img1} alt="" />
+        <img
+          src={playList[currentIndex].img}
+          alt={playList[currentIndex].name}
+        />
       </div>
       <div className="music-info">
-        <p className="song">음악제목</p>
-        <p className="artist">아티스트</p>
+        <p className="song">{playList[currentIndex].name}</p>
+        <p className="artist">{playList[currentIndex].artist}</p>
       </div>
     </>
   );
