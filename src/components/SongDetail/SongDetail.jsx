@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import "./SongDetail.scss";
 import { useSelector } from "react-redux";
 
@@ -26,5 +26,5 @@ function SongDetail() {
     </>
   );
 }
-
-export default SongDetail;
+// app.js 의 showPlayList 에 따라 불필요하게 컴포넌트들이 다시 그려지는 걸 막기 위해
+export default memo(SongDetail);

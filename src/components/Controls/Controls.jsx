@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, memo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import RepeatOneIcon from "@mui/icons-material/RepeatOne";
@@ -18,7 +18,7 @@ import {
 
 // repeat을 제어할 컴포넌트를 내부에서 선언하고 <RepeatButton > 으로 불러 사용한다.
 // ...props 를 통해 onClick 이벤트도 붙여준다.
-const RepeatButton = ({ repeat, ...props }) => {
+const RepeatButton = memo(({ repeat, ...props }) => {
   switch (repeat) {
     case "ALL":
       return <RepeatIcon sx={{ fontSize: 30, cursor: "pointer" }} {...props} />;
@@ -33,7 +33,7 @@ const RepeatButton = ({ repeat, ...props }) => {
     default:
       return <RepeatIcon sx={{ fontSize: 30, cursor: "pointer" }} {...props} />;
   }
-};
+});
 
 const Controls = ({
   setShowPlayList,
@@ -119,5 +119,5 @@ const Controls = ({
     </div>
   );
 };
-
-export default Controls;
+// app.js 의 showPlayList 에 따라 불필요하게 컴포넌트들이 다시 그려지는 걸 막기 위해
+export default memo(Controls);

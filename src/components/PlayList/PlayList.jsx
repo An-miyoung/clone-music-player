@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, memo } from "react";
 import QueueMusic from "@mui/icons-material/QueueMusic";
 import Close from "@mui/icons-material/Close";
 import PlayListItem from "./PlayListItem";
@@ -56,5 +56,5 @@ const PlayList = ({ showPlayList, setShowPlayList }) => {
     </div>
   );
 };
-
-export default PlayList;
+// app.js 의 showPlayList 에 따라 불필요하게 컴포넌트들이 다시 그려지는 걸 막기 위해
+export default memo(PlayList);

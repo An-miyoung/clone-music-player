@@ -4,6 +4,7 @@ import React, {
   forwardRef,
   useCallback,
   useState,
+  memo,
 } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import "./ProgressArea.scss";
@@ -108,5 +109,5 @@ function ProgressArea(props, ref) {
     </div>
   );
 }
-
-export default forwardRef(ProgressArea);
+// app.js 의 showPlayList 에 따라 불필요하게 컴포넌트들이 다시 그려지는 걸 막기 위해
+export default memo(forwardRef(ProgressArea));
