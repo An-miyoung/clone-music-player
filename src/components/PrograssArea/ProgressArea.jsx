@@ -7,7 +7,11 @@ import React, {
 } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import "./ProgressArea.scss";
-import { playMusic, stopMusic } from "../../store/musicPlayerReducer";
+import {
+  nextMusic,
+  playMusic,
+  stopMusic,
+} from "../../store/musicPlayerReducer";
 
 function ProgressArea(props, ref) {
   // 실제 핸들링되는 ref: 새로운 ref 선언해서 js 가 제공하는 audio 에 붙인다.
@@ -68,11 +72,16 @@ function ProgressArea(props, ref) {
     audioRef.current.currentTime = (offsetX / progressBarWidth) * duration;
   }, []);
 
+  const onEnded = useCallback(() => {
+    dispatch(nextMusic());
+  }, [dispatch]);
+
   return (
     <div className="progress-area" onMouseDown={onClickProgress}>
       <div className="progress-bar" ref={progressBar}>
         <audio
           autoPlay
+          onEnded={onEnded}
           ref={audioRef}
           src={playList[currentIndex].src}
           onPlay={onPlay}
