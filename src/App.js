@@ -4,22 +4,25 @@ import PlayList from "./components/PlayList/PlayList";
 import ProgressArea from "./components/PrograssArea/ProgressArea";
 import SongDetail from "./components/SongDetail/SongDetail";
 
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 
 function App() {
   const audioRef = useRef();
-  const onPlay = () => {
+  const onPlay = useCallback(() => {
     audioRef.current.play();
-  };
-  const onPause = () => {
+  }, []);
+  const onPause = useCallback(() => {
     audioRef.current.pause();
-  };
+  }, []);
+  const changeVolume = useCallback((volume) => {
+    audioRef.current.changeVolume(volume);
+  }, []);
   return (
     <div className="App">
       <div className="container">
         <SongDetail />
         <ProgressArea ref={audioRef} />
-        <Controls play={onPlay} pause={onPause} />
+        <Controls play={onPlay} pause={onPause} changeVolume={changeVolume} />
         <PlayList />
       </div>
     </div>

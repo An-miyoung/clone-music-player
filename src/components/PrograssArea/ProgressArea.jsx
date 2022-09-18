@@ -26,6 +26,9 @@ function ProgressArea(props, ref) {
     pause: () => {
       audioRef.current.pause();
     },
+    changeVolume: (volume) => {
+      audioRef.current.volume = volume;
+    },
   }));
 
   const onPlay = useCallback(() => {
