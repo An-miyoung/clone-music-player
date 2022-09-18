@@ -6,7 +6,10 @@ import classNames from "classnames";
 import "./PlayList.scss";
 import { useSelector, useDispatch } from "react-redux";
 import SortableList from "../../sortable/SortableList";
-import { setCurrentIndex } from "../../store/musicPlayerReducer";
+import {
+  setCurrentIndex,
+  updatePlayList,
+} from "../../store/musicPlayerReducer";
 
 const PlayList = ({ showPlayList, setShowPlayList }) => {
   const playList = useSelector((state) => state.playList);
@@ -16,13 +19,20 @@ const PlayList = ({ showPlayList, setShowPlayList }) => {
     setShowPlayList(false);
   }, [setShowPlayList]);
 
-  const onDropItem = useCallback(() => {}, []);
+  const onDropItem = useCallback(
+    (newPlayList) => {
+      dispatch(updatePlayList(newPlayList));
+    },
+    [dispatch]
+  );
+
   const onClickItem = useCallback(
     (index) => {
       dispatch(setCurrentIndex(index));
     },
     [dispatch]
   );
+
   const renderItem = useCallback(
     (item, index) => <PlayListItem item={item} index={index} />,
     []
