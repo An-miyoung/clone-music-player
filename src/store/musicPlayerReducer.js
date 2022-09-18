@@ -61,12 +61,14 @@ const STOP_MUSIC = "musicPlayer/STOP_MUSIC";
 const NEXT_MUSIC = "musicPlayer/NEXT_MUSIC";
 const PREV_MUSIC = "musicPlayer/PREV_MUSIC";
 const SET_REPEAT = "musicPlayer/SET_REPEAT";
+const SET_CURRENT_INDEX = "musicPlayer/SET_CURRENT_INDEX ";
 
 export const playMusic = () => ({ type: PLAY_MUSIC });
 export const stopMusic = () => ({ type: STOP_MUSIC });
 export const nextMusic = () => ({ type: NEXT_MUSIC });
 export const prevMusic = () => ({ type: PREV_MUSIC });
 export const setRepeat = () => ({ type: SET_REPEAT });
+export const setCurrentIndex = (index) => ({ type: SET_CURRENT_INDEX, index });
 
 // repeat mode 가 shuffle 인 경우 next, prev 가 1씩 증가,감소 하지 않고 random 하게 움직이도록 random한 수를 만드는 함수
 const getRandomNumber = (arr, excludeNum) => {
@@ -122,6 +124,12 @@ const musicPlayerReducer = (state = initialState, action) => {
           repeatMode[
             (repeatMode.indexOf(state.repeat) + 1) % repeatMode.length
           ],
+      };
+    case SET_CURRENT_INDEX:
+      return {
+        ...state,
+        currentIndex: action.index,
+        CurrentMusicId: state.playList[action.index].id,
       };
     default:
       return state;

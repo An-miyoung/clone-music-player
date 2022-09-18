@@ -1,29 +1,48 @@
-import React from "react";
+import React, { useCallback } from "react";
 import QueueMusic from "@mui/icons-material/QueueMusic";
 import Close from "@mui/icons-material/Close";
 import PlayListItem from "./PlayListItem";
 import classNames from "classnames";
 import "./PlayList.scss";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import SortableList from "../../sortable/SortableList";
+import { setCurrentIndex } from "../../store/musicPlayerReducer";
 
-const PlayList = ({ showMusicList, setShowMusicList }) => {
+const PlayList = ({ showPlayList, setShowPlayList }) => {
   const playList = useSelector((state) => state.playList);
+  const dispatch = useDispatch();
+
+  const onClose = useCallback(() => {
+    setShowPlayList(false);
+  }, [setShowPlayList]);
+
+  const onDropItem = useCallback(() => {}, []);
+  const onClickItem = useCallback(
+    (index) => {
+      dispatch(setCurrentIndex(index));
+    },
+    [dispatch]
+  );
+  const renderItem = useCallback(
+    (item, index) => <PlayListItem item={item} index={index} />,
+    []
+  );
+
   return (
-    <div className={classNames("play-list")}>
+    <div className={classNames("play-list", { show: showPlayList })}>
       <div className="header">
         <div className="row">
           <QueueMusic className="list" />
           <span>Play list</span>
         </div>
-        <Close sx={{ fontSize: 22, cursor: "pointer" }} />
+        <Close sx={{ fontSize: 22, cursor: "pointer" }} onClick={onClose} />
       </div>
-      <ul>
-        {playList.map((item, index) => (
-          <li key={index}>
-            <PlayListItem item={item} index={index} />
-          </li>
-        ))}
-      </ul>
+      <SortableList
+        data={playList}
+        onDropItem={onDropItem}
+        onClickItem={onClickItem}
+        renderItem={renderItem}
+      />
     </div>
   );
 };
