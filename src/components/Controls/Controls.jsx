@@ -10,7 +10,30 @@ import QueueMusic from "@mui/icons-material/QueueMusic";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import "./Controls.scss";
-import { nextMusic, prevMusic } from "../../store/musicPlayerReducer";
+import {
+  nextMusic,
+  prevMusic,
+  setRepeat,
+} from "../../store/musicPlayerReducer";
+
+// repeat을 제어할 컴포넌트를 내부에서 선언하고 <RepeatButton > 으로 불러 사용한다.
+// ...props 를 통해 onClick 이벤트도 붙여준다.
+const RepeatButton = ({ repeat, ...props }) => {
+  switch (repeat) {
+    case "ALL":
+      return <RepeatIcon sx={{ fontSize: 30, cursor: "pointer" }} {...props} />;
+    case "ONE":
+      return (
+        <RepeatOneIcon sx={{ fontSize: 30, cursor: "pointer" }} {...props} />
+      );
+    case "SHUFFLE":
+      return (
+        <ShuffleIcon sx={{ fontSize: 30, cursor: "pointer" }} {...props} />
+      );
+    default:
+      return <RepeatIcon sx={{ fontSize: 30, cursor: "pointer" }} {...props} />;
+  }
+};
 
 const Controls = ({
   showMusicList,
@@ -21,6 +44,7 @@ const Controls = ({
   changeVolume,
 }) => {
   const { playingState } = useSelector((state) => state);
+  const repeat = useSelector((state) => state.repeat);
   const dispatch = useDispatch();
 
   const onClickPlay = useCallback(() => {
@@ -42,10 +66,15 @@ const Controls = ({
     dispatch(nextMusic());
   }, [dispatch]);
 
+  const onClickRepeat = useCallback(() => {
+    dispatch(setRepeat());
+  }, [dispatch]);
+
   return (
     <div className="control-area">
       <QueueMusic sx={{ fontSize: 30, cursor: "pointer" }} />
-      <RepeatIcon sx={{ fontSize: 30, cursor: "pointer" }} />
+      <RepeatButton repeat={repeat} onClick={onClickRepeat} />
+
       <SkipPrevious
         sx={{ fontSize: 30, cursor: "pointer" }}
         onClick={onClickPrev}

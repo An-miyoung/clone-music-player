@@ -55,15 +55,26 @@ const initialState = {
   repeat: "ALL",
 };
 
+const repeatMode = ["ONE", "ALL", "SHUFFLE"];
 const PLAY_MUSIC = "musicPlayer/PLAY_MUSIC";
 const STOP_MUSIC = "musicPlayer/STOP_MUSIC";
 const NEXT_MUSIC = "musicPlayer/NEXT_MUSIC";
 const PREV_MUSIC = "musicPlayer/PREV_MUSIC";
+const SET_REPEAT = "musicPlayer/SET_REPEAT";
 
 export const playMusic = () => ({ type: PLAY_MUSIC });
 export const stopMusic = () => ({ type: STOP_MUSIC });
 export const nextMusic = () => ({ type: NEXT_MUSIC });
 export const prevMusic = () => ({ type: PREV_MUSIC });
+export const setRepeat = () => ({ type: SET_REPEAT });
+
+// repeat mode 가 shuffle 인 경우 next, prev 가 1씩 증가,감소 하지 않고 random 하게 움직이도록 random한 수를 만드는 함수
+const getRandomNumber = (arr, excludeNum) => {
+  const randomNumber = Math.floor(Math.random() * arr.length);
+  return arr[randomNumber] === excludeNum
+    ? getRandomNumber(arr, excludeNum)
+    : arr[randomNumber];
+};
 
 const musicPlayerReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -78,7 +89,13 @@ const musicPlayerReducer = (state = initialState, action) => {
         playingState: false,
       };
     case NEXT_MUSIC:
-      const nextIndex = (state.currentIndex + 1) % state.playList.length;
+      const nextIndex =
+        state.repeat === "SHUFFLE"
+          ? getRandomNumber(
+              Array.from(Array(state.playList.length).keys()),
+              state.currentIndex
+            )
+          : (state.currentIndex + 1) % state.playList.length;
       return {
         ...state,
         currentIndex: nextIndex,
@@ -86,12 +103,25 @@ const musicPlayerReducer = (state = initialState, action) => {
       };
     case PREV_MUSIC:
       const prevIndex =
-        (state.currentIndex - 1 + state.playList.length) %
-        state.playList.length;
+        state.repeat === "SHUFFLE"
+          ? getRandomNumber(
+              Array.from(Array(state.playList.length).keys()),
+              state.currentIndex
+            )
+          : (state.currentIndex - 1 + state.playList.length) %
+            state.playList.length;
       return {
         ...state,
         currentIndex: prevIndex,
         CurrentMusicId: playList[prevIndex].id,
+      };
+    case SET_REPEAT:
+      return {
+        ...state,
+        repeat:
+          repeatMode[
+            (repeatMode.indexOf(state.repeat) + 1) % repeatMode.length
+          ],
       };
     default:
       return state;
