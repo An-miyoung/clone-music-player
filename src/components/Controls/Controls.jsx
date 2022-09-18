@@ -54,17 +54,20 @@ const Controls = ({
     pause();
   }, [pause]);
 
-  const onChangeVolume = (e) => {
-    changeVolume(e.target.value);
-  };
+  const onChangeVolume = useCallback(
+    (e) => {
+      changeVolume(e.target.value);
+    },
+    [changeVolume]
+  );
 
   const onClickPrev = useCallback(() => {
-    dispatch(prevMusic());
-  }, [dispatch]);
+    repeat === "ONE" ? resetDuration() : dispatch(prevMusic());
+  }, [dispatch, repeat, resetDuration]);
 
   const onClickNext = useCallback(() => {
-    dispatch(nextMusic());
-  }, [dispatch]);
+    repeat === "ONE" ? resetDuration() : dispatch(nextMusic());
+  }, [dispatch, repeat, resetDuration]);
 
   const onClickRepeat = useCallback(() => {
     dispatch(setRepeat());

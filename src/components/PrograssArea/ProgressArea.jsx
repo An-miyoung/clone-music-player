@@ -18,8 +18,12 @@ function ProgressArea(props, ref) {
   const audioRef = useRef();
   const progressBar = useRef();
   // 함수가 계속 rerender 되는 것을 막기 위해 shallowEqual 사용
-  const { playList, currentIndex } = useSelector(
-    (state) => ({ playList: state.playList, currentIndex: state.currentIndex }),
+  const { playList, currentIndex, repeat } = useSelector(
+    (state) => ({
+      playList: state.playList,
+      currentIndex: state.currentIndex,
+      repeat: state.repeat,
+    }),
     shallowEqual
   );
   const dispatch = useDispatch();
@@ -36,6 +40,9 @@ function ProgressArea(props, ref) {
     },
     changeVolume: (volume) => {
       audioRef.current.volume = volume;
+    },
+    resetDuration: () => {
+      audioRef.current.currentTime = 0;
     },
   }));
 
@@ -73,8 +80,13 @@ function ProgressArea(props, ref) {
   }, []);
 
   const onEnded = useCallback(() => {
-    dispatch(nextMusic());
-  }, [dispatch]);
+    if (repeat === "ONE") {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    } else {
+      dispatch(nextMusic());
+    }
+  }, [dispatch, repeat]);
 
   return (
     <div className="progress-area" onMouseDown={onClickProgress}>
